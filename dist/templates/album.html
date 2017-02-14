@@ -14,8 +14,7 @@
 <main class="album-view container narrow">
      <section class="clearfix">
          <div class="column half">
-             ////Replace the static song information with the song data using the corresponding scope properties and {{ }} markup:
-             <img src="{{ album.albumArtUrl }}" class="album-cover-art">
+             <img src="assets/images/album_covers/01.png" class="album-cover-art">
          </div>
          <div class="album-view-details column half">
              <h2 class="album-view-title">The Colors</h2>
@@ -24,7 +23,6 @@
          </div>
      </section>
      <table class="album-view-song-list">
-    // Use ngRepeat on the album-view-song-item table row to add a song row for each song on the album. 
          <tr class="album-view-song-item" ng-repeat="songs in album.albumData" ng-mouseover="hovered = true" ng-mouseleave="hovered = false">
          <td class="song-item-number">
             <span ng-show="!playing && !hovered">1</span>
