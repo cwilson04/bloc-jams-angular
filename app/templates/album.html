@@ -1,7 +1,21 @@
+<!DOCTYPE html>
+ <html>
+     <head>
+         <title>Bloc Jams</title>
+         <meta name="viewport" content="width=device-width, initial-scale=1">
+         <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,800,600,700,300">
+         <link rel="stylesheet" type="text/css" href="//code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+         <link rel="stylesheet" type="text/css" href="styles/normalize.css">
+         <link rel="stylesheet" type="text/css" href="styles/main.css">
+         <link rel="stylesheet" type="text/css" href="styles/album.css">
+         <link rel="stylesheet" type="text/css" href="styles/player_bar.css">
+     </head>
+
 <main class="album-view container narrow">
      <section class="clearfix">
          <div class="column half">
-             <img src="/assets/images/album_covers/01.png" class="album-cover-art">
+             ////Replace the static song information with the song data using the corresponding scope properties and {{ }} markup:
+             <img src="{{ album.albumArtUrl }}" class="album-cover-art">
          </div>
          <div class="album-view-details column half">
              <h2 class="album-view-title">The Colors</h2>
@@ -10,7 +24,8 @@
          </div>
      </section>
      <table class="album-view-song-list">
-         <tr class="album-view-song-item" ng-mouseover="hovered = true" ng-mouseleave="hovered = false">
+    // Use ngRepeat on the album-view-song-item table row to add a song row for each song on the album. 
+         <tr class="album-view-song-item" ng-repeat="songs in album.albumData" ng-mouseover="hovered = true" ng-mouseleave="hovered = false">
          <td class="song-item-number">
             <span ng-show="!playing && !hovered">1</span>
             <a class="album-song-button" ng-show="!playing && hovered"><span class="ion-play"></span></a>
@@ -21,4 +36,9 @@
          </tr>
      </table>
  </main>
- <ng-include src="'/templates/player_bar.html'"></ng-include>
+     <ng-include src="'/templates/player_bar.html'"></ng-include>
+ 
+    <script src="scripts/fixtures.js"></script>
+    
+    </body>
+</html>    
