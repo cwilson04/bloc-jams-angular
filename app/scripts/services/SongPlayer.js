@@ -56,12 +56,13 @@
         SongPlayer.play = function(song) {
             song = song || SongPlayer.currentSong;
             if (SongPlayer.currentSong !== song) {
-                setSong(song);
+                 setSong(song);
+                 playSong(song);
         //If the user can trigger the play method on a song that is already set as the  currentSong, then the assumption is that the song must be paused. 
         //conditional statement if (currentBuzzObject.isPaused()) is a check to make sure our assumption is correct.
             } else if (SongPlayer.currentSong === song) {
-                if (SongPlayer.currentSong.paused) {
-                    currentBuzzObject.play();
+                if (currentBuzzObject.isPaused()) {
+                    playSong(song);
                 }
             }
         };
@@ -75,6 +76,10 @@
             currentBuzzObject.play();
             song.playing = true;
             playSong(song);
+        };
+        
+        var getSongIndex = function(song) {
+            return currentAlbum.songs.indexOf(song);
         };
     
     
@@ -99,6 +104,8 @@
                 playSong(song);
             }
         };
+        
+        return SongPlayer;
     }
     
      angular
