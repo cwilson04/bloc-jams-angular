@@ -1,7 +1,20 @@
 (function() {
+    //Inject the Fixtures service into the SongPlayer service. Then use the getAlbum method to store the album information:
     function SongPlayer(Fixtures) {
+        
         var SongPlayer = {};
         
+        /**
+         * @desc Active song object from list of songs
+         * @type {Object}
+        */
+        
+         SongPlayer.currentSong = null;
+        
+        /**
+             * @desc Active album object from album collection
+             * @type {Object}
+        */
         var currentAlbum = Fixtures.getAlbum();
         
         /**
@@ -17,7 +30,6 @@
              * @desc Stops currently playing song and loads new audio file as currentBuzzObject
              * @param {Object} song
         */
- 
         
         var setSong = function(song) {
             if (currentBuzzObject) {
@@ -27,22 +39,15 @@
             }
             
        
-        currentBuzzObject = new buzz.sound(song.audioUrl, {
-            formats: ['mp3'],
-            preload: true
-        });
+            currentBuzzObject = new buzz.sound(song.audioUrl, {
+                formats: ['mp3'],
+                preload: true
+            });
         
-        SongPlayer.currentSong = song;
+            SongPlayer.currentSong = song;
         };
         
-        
-        var getSongIndex = function(song) {
-            return currentAlbum.songs.indexOf(song);
-        };
-        //change currentSong into a public attribute
-        SongPlayer.currentSong = null;
-        
-
+   
         /**
              * @function SongPlayer.play
              * @desc Update the play method with a condition that checks if the currently playing song is not equal to the song the user clicks on:
@@ -52,12 +57,14 @@
             song = song || SongPlayer.currentSong;
             if (SongPlayer.currentSong !== song) {
                 setSong(song);
-                //If the user can trigger the play method on a song that is already set as the  currentSong, then the assumption is that the song must be paused. 
-                //conditional statement if (currentBuzzObject.isPaused()) is a check to make sure our assumption is correct.
-                } else if (SongPlayer.currentSong === song) {
+        //If the user can trigger the play method on a song that is already set as the  currentSong, then the assumption is that the song must be paused. 
+        //conditional statement if (currentBuzzObject.isPaused()) is a check to make sure our assumption is correct.
+            } else if (SongPlayer.currentSong === song) {
                 if (SongPlayer.currentSong.paused) {
-                 currentBuzzObject.play();
+                    currentBuzzObject.play();
+                }
             }
+        };
             
        /**
              * @function playSong
@@ -67,41 +74,35 @@
         var playSong = function(song) {
             currentBuzzObject.play();
             song.playing = true;
-        }
-            
+            playSong(song);
+        };
+    
+    
 
-
-       playSong(song);
-       console.log("Play Song");
-     }
-     
- 
-};
-
-    SongPlayer.pause = function(song) {
-        song = song || SongPlayer.currentSong;
-        currentBuzzObject.pause();
-        song.playing = false;
-    };
-    return SongPlayer;
+        SongPlayer.pause = function(song) {
+            song = song || SongPlayer.currentSong;
+            currentBuzzObject.pause();
+            song.playing = false;
+        };
+        
+    
+        SongPlayer.previous = function() {
+            var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+            currentSongIndex--;
+        
+            if (currentSongIndex < 0) {
+                currentBuzzObject.stop();
+                SongPlayer.currentSong.playing = null;
+            } else {
+                var song = currentAlbum.songs[currentSongIndex];
+                setSong(song);
+                playSong(song);
+            }
+        };
     }
-    
-    SongPlayer.previous = function() {
-     var currentSongIndex = getSongIndex(SongPlayer.currentSong);
-     currentSongIndex--;
-     
-     if (currentSongIndex < 0) {
-         currentBuzzObject.stop();
-         SongPlayer.currentSong.playing = null;
-     } else {
-         var song = currentAlbum.songs[currentSongIndex];
-         setSong(song);
-         playSong(song);
-     }
-    };
-    
     
      angular
          .module('blocJams')
           .factory('SongPlayer', ['Fixtures', SongPlayer]);
  })();
+    
