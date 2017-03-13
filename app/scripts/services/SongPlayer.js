@@ -1,6 +1,6 @@
 (function() {
     //Inject the Fixtures service into the SongPlayer service. Then use the getAlbum method to store the album information:
-    function SongPlayer(Fixtures) {
+    function SongPlayer($rootScope, Fixtures) {
         
         var SongPlayer = {};
         
@@ -10,6 +10,12 @@
         */
         
          SongPlayer.currentSong = null;
+         
+         /**
+            * @desc Current playback time (in seconds) of currently playing song
+            * @type {Number}
+         */
+        SongPlayer.currentTime = null;
         
         /**
              * @desc Active album object from album collection
@@ -42,6 +48,12 @@
             currentBuzzObject = new buzz.sound(song.audioUrl, {
                 formats: ['mp3'],
                 preload: true
+            });
+            
+            currentBuzzObject.bind('timeupdate', function() {
+                $rootScope.$apply(function() {
+                    SongPlayer.currentTime = currentBuzzObject.getTime();
+                });
             });
         
             SongPlayer.currentSong = song;
@@ -125,11 +137,31 @@
             playSong(song);
         }
         
+        /**
+        * @function setCurrentTime
+        * @desc Set current time (in seconds) of currently playing song
+        * @param {Number} time
+        */
+        SongPlayer.setCurrentTime = function(time) {
+            if (currentBuzzObject) {
+             currentBuzzObject.setTime(time);
+            }
+        };
+        
+        SongPlayer.volume = null;
+        
+        SongPlayer.setVolume = function(volume) {
+            if (currentBuzzObject) {
+            currentBuzzObject.setVolume(volume);
+            }
+            SongPlayer.volume = volume;
+        };
+        
         return SongPlayer;
     }
     
      angular
          .module('blocJams')
-          .factory('SongPlayer', ['Fixtures', SongPlayer]);
+         .factory('SongPlayer', ['$rootScope', 'Fixtures', SongPlayer]);
  })();
     
