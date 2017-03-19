@@ -148,7 +148,7 @@
             }
         };
         
-        SongPlayer.volume = null;
+        SongPlayer.volume = 60;
         
         SongPlayer.setVolume = function(volume) {
             if (currentBuzzObject) {
